@@ -15,7 +15,9 @@ RUN apt-get update && apt-get install -y \
     libjpeg-dev \
     libfreetype6-dev \
     && docker-php-ext-install pdo pdo_mysql zip mbstring exif pcntl bcmath gd
-
+RUN apt-get install -y libicu-dev && docker-php-ext-install intl
+RUN docker-php-ext-install opcacheRUN apt-get install -y libicu-dev && docker-php-ext-install intl
+RUN docker-php-ext-install opcache
 # Copy app source
 COPY src/ /var/www/html/
 RUN chown -R www-data:www-data /var/www/html
