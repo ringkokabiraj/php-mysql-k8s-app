@@ -29,15 +29,28 @@ jobs:
         run: |
           docker build -t ${{ secrets.DOCKER_USERNAME }}/php-app:latest .
           docker push ${{ secrets.DOCKER_USERNAME }}/php-app:latest
+  Implement:
+    name: Deploy to Self-Hosted Kubernetes
+    runs-on: self-hosted # 👈 Use your private runner with proper labels
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
 
       - name: Set up Kubeconfig
         run: |
-            mkdir -p $HOME/.kube
-            echo "${{ secrets.KUBE_CONFIG }}" > $HOME/.kube/config
+          mkdir -p $HOME/.kube
+          echo "${{ secrets.KUBE_CONFIG }}" | base64 -d > $HOME/.kube/config
+          chmod 600 $HOME/.kube/config
 
       - name: Deploy to Kubernetes
         run: |
+          set -e
           kubectl apply -f k8s/mysql-deployment.yaml
           kubectl apply -f k8s/mysql-service.yaml
           kubectl apply -f k8s/php-deployment.yaml
           kubectl apply -f k8s/php-service.yaml
+
+      - name: Verify Deployment
+        run: |
+          kubectl rollout status deployment/php-deployment
