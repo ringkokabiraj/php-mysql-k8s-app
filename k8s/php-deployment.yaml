@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: php-app
-          image: ringkokabiraj/php-app:v1
+          image: ringkokabiraj/nginx-php-app:latest
           ports:
             - containerPort: 80
          
