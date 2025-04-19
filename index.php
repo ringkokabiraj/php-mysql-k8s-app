@@ -1,3 +1,3 @@
 <?php
-phpinfo();
+echo "This is First CI/CD on my Kubernetes";
 ?>
