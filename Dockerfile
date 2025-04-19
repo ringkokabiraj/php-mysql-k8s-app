@@ -26,6 +26,6 @@ RUN a2enmod rewrite
 
 # Copy application files
 COPY . /var/www/html/
-
+RUN chown -R www-data:www-data /var/www/html
 # Expose port 80
 EXPOSE 80
