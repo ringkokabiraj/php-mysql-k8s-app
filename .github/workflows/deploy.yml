@@ -29,8 +29,8 @@ jobs:
 
       - name: Build and push Docker image
         run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/php-app:latest .
-          docker push ${{ secrets.DOCKER_USERNAME }}/php-app:latest
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/php-app:v1 .
+          docker push ${{ secrets.DOCKER_USERNAME }}/php-app:v1
 
   implement:  # 👈 job ID must be lowercase (recommended)
     name: Deploy to Self-Hosted Kubernetes

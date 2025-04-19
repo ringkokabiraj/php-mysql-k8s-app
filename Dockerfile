@@ -1,31 +1,31 @@
-FROM php:7.4-apache
+FROM php:8.2-fpm
 
-# Install system dependencies
+# Install system dependencies and PHP extensions
 RUN apt-get update && apt-get install -y \
-    libpng-dev \
-    libjpeg62-turbo-dev \
-    libfreetype6-dev \
-    libzip-dev \
-    unzip \
-    libicu-dev \
-    git \
+    nginx \
+    curl \
     zip \
+    unzip \
+    git \
+    libzip-dev \
+    libpng-dev \
     libonig-dev \
-    && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install \
-        pdo \
-        pdo_mysql \
-        mysqli \
-        gd \
-        zip \
-        intl \
-        opcache
+    libxml2-dev \
+    libjpeg-dev \
+    libfreetype6-dev \
+    && docker-php-ext-install pdo pdo_mysql zip mbstring exif pcntl bcmath gd
 
-# Enable Apache mod_rewrite if needed
-RUN a2enmod rewrite
+# Copy app source
+COPY src/ /var/www/html/
 
-# Copy application files
-COPY . /var/www/html/
+# Set correct permissions
 RUN chown -R www-data:www-data /var/www/html
-# Expose port 80
+
+# Copy Nginx config
+COPY default.conf /etc/nginx/conf.d/default.conf
+
+# Expose ports
 EXPOSE 80
+
+# Start both PHP-FPM and Nginx
+CMD service php8.2-fpm start && nginx -g 'daemon off;'
