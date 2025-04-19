@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: php-app
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: php-app
@@ -17,12 +17,4 @@ spec:
           image: ringkokabiraj/php-app:v1
           ports:
             - containerPort: 80
-          env:
-            - name: DB_HOST
-              value: mysql
-            - name: DB_NAME
-              value: myapp
-            - name: DB_USER
-              value: root
-            - name: DB_PASS
-              value: rootpassword
+         

@@ -29,8 +29,8 @@ jobs:
 
       - name: Build and push Docker image
         run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/php-app:v1 .
-          docker push ${{ secrets.DOCKER_USERNAME }}/php-app:v1
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/nginx-php-app:latest .
+          docker push ${{ secrets.DOCKER_USERNAME }}/nginx-php-app:latest
 
   implement:  # 👈 job ID must be lowercase (recommended)
     name: Deploy to Self-Hosted Kubernetes
@@ -50,7 +50,5 @@ jobs:
       - name: Deploy to Kubernetes
         run: |
             set -e
-            kubectl apply -f k8s/mysql-deployment.yaml || echo "No MySQL deployment found"
-            kubectl apply -f k8s/mysql-service.yaml || echo "No MySQL service found"
             kubectl apply -f k8s/php-deployment.yaml || echo "No PHP deployment found"
             kubectl apply -f k8s/php-service.yaml || echo "No PHP service found"
