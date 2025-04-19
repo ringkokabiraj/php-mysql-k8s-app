@@ -31,7 +31,11 @@ jobs:
         run: |
           docker build -t ${{ secrets.DOCKER_USERNAME }}/php-app:latest .
           docker push ${{ secrets.DOCKER_USERNAME }}/php-app:latest
-
+      - name: Set up Kubeconfig
+        run: |
+          mkdir -p $HOME/.kube
+          echo "${{ secrets.KUBE_CONFIG }}" | base64 -d > $HOME/.kube/config
+          chmod 600 $HOME/.kube/config
   implement:  # 👈 job ID must be lowercase (recommended)
     name: Deploy to Self-Hosted Kubernetes
     needs: deploy  # 👈 refer to the job ID above
@@ -39,13 +43,8 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
 
-      - name: Set up Kubeconfig
-        run: |
-          mkdir -p $HOME/.kube
-          echo "${{ secrets.KUBE_CONFIG }}" | base64 -d > $HOME/.kube/config
-          chmod 600 $HOME/.kube/config
+        uses: actions/checkout@v3
 
       - name: Deploy to Kubernetes
         run: |
