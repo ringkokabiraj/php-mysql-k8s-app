@@ -1,3 +1,3 @@
 <?php
-phpinfo();
+echo "Congratulation!!! Successfully done";
 ?>
