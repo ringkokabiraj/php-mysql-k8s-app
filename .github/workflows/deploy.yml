@@ -50,6 +50,10 @@ jobs:
       - name: Deploy to Kubernetes
         run: |
             set -e
+            kubectl delete -f k8s/mysql-deployment.yaml
+            kubectl delete -f k8s/mysql-service.yaml
+            kubectl delete -f k8s/php-deployment.yaml
+            kubectl delete -f k8s/php-service.yaml
             kubectl apply -f k8s/mysql-deployment.yaml || echo "No MySQL deployment found"
             kubectl apply -f k8s/mysql-service.yaml || echo "No MySQL service found"
             kubectl apply -f k8s/php-deployment.yaml || echo "No PHP deployment found"
