@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: php-app
-          image: <YOUR_DOCKERHUB_USERNAME>/php-app:latest
+          image: ringkokabiraj/php-app:latest
           ports:
             - containerPort: 80
           env:
