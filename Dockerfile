@@ -1,24 +1,35 @@
+# Base PHP image
 FROM php:8.2-fpm
 
-# Install system dependencies and PHP extensions
+# Install system packages and PHP extensions
 RUN apt-get update && apt-get install -y \
     nginx \
-    supervisor \
     curl \
-    zip \
-    unzip \
+    zip unzip \
     git \
-    libzip-dev \
     libpng-dev \
-    libonig-dev \
-    libxml2-dev \
     libjpeg-dev \
     libfreetype6-dev \
-    && docker-php-ext-install pdo pdo_mysql zip mbstring exif pcntl bcmath gd
-RUN apt-get install -y libicu-dev && docker-php-ext-install intl
-RUN docker-php-ext-install opcache
-RUN apt-get install -y libicu-dev && docker-php-ext-install intl
-RUN docker-php-ext-install opcache
+    libonig-dev \
+    libxml2-dev \
+    libzip-dev \
+    libmcrypt-dev \
+    libicu-dev \
+    libxslt1-dev \
+    libssl-dev \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install \
+        gd \
+        mysqli \
+        pdo \
+        pdo_mysql \
+        zip \
+        mbstring \
+        xml \
+        opcache \
+        intl \
+        xsl \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 # Copy app source
 COPY src/ /var/www/html/
 RUN chown -R www-data:www-data /var/www/html
