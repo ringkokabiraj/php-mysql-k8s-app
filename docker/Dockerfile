@@ -1,22 +1,35 @@
-# Use the official PHP-FPM image as a base
-FROM php:8.2-fpm
+FROM debian:bullseye
 
-# Install necessary packages (e.g., nginx, supervisor, etc.)
-RUN apt-get update && apt-get install -y nginx \
-    default-mysql-client \
-    libzip-dev zip unzip supervisor \
-    && docker-php-ext-install pdo pdo_mysql zip
+ENV DEBIAN_FRONTEND=noninteractive
 
-# Copy site files and NGINX config
-COPY html/ /var/www/html
+# Install base tools
+RUN apt-get update && apt-get install -y \
+    curl gnupg2 ca-certificates lsb-release apt-transport-https unzip supervisor
+
+# Add PHP repo and install PHP + extensions
+RUN apt-get install -y gnupg \
+    && curl -fsSL https://packages.sury.org/php/apt.gpg | gpg --dearmor -o /etc/apt/trusted.gpg.d/php.gpg \
+    && echo "deb https://packages.sury.org/php/ bullseye main" > /etc/apt/sources.list.d/php.list \
+    && apt-get update
+
+RUN apt-get install -y php8.2 php8.2-fpm php8.2-cli php8.2-common php8.2-mysql php8.2-pgsql \
+    php8.2-curl php8.2-mbstring php8.2-xml php8.2-gd php8.2-zip php8.2-soap php8.2-bcmath php8.2-intl php8.2-readline
+
+# Install nginx
+RUN apt-get install -y nginx, net-tools, vim
+
+# Clean up
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Copy configs
 COPY docker/default.conf /etc/nginx/conf.d/default.conf
-
-COPY docker/www.conf /usr/local/etc/php-fpm.d/www.conf
-
-# Expose necessary ports
-EXPOSE 80
-
-# Use supervisor to run both NGINX and PHP-FPM
 COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+COPY html/index.php /var/www/html/index.php
+
+# Set permissions
+RUN chown -R www-data:www-data /var/www/html
+
+# Expose ports
+EXPOSE 80
 
 CMD ["/usr/bin/supervisord"]
