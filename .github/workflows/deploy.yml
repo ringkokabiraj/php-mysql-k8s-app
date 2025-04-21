@@ -29,7 +29,7 @@ jobs:
 
       - name: Build and push Docker image
         run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/nginx-php-app:latest .
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/nginx-php-app:latest -f docker/Dockerfile
           docker push ${{ secrets.DOCKER_USERNAME }}/nginx-php-app:latest
 
   implement:  # 👈 job ID must be lowercase (recommended)
