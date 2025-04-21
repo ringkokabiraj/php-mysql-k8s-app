@@ -26,7 +26,7 @@ RUN apt install -y vim
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Copy configs
-COPY docker/default.conf /etc/nginx/conf.d/default.conf
+COPY docker/default /etc/nginx/sites-available/default
 COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 COPY html/index.php /var/www/html/index.php
 
