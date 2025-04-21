@@ -36,4 +36,6 @@ RUN chown -R www-data:www-data /var/www/html
 # Expose ports
 EXPOSE 80
 
+RUN mkdir -p /run/php && chown -R www-data:www-data /run/php
+
 CMD ["/usr/bin/supervisord"]
