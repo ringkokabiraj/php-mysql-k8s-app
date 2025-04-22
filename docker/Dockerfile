@@ -28,7 +28,7 @@ RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 # Copy configs
 COPY docker/default /etc/nginx/sites-available/default
 COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-COPY html/index.php /var/www/html/index.php
+COPY html /var/www/html
 
 # Set permissions
 RUN chown -R www-data:www-data /var/www/html
